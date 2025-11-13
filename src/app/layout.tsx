@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Winter Moth Egg",
+  title: "Winter Moth Egg Detector",
   description: "Research Project - Faiz Firdaus",
 };
 

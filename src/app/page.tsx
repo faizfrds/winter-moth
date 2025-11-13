@@ -163,7 +163,9 @@ export default function Home() {
       </div>
       
       <footer className="text-center mt-8 text-gray-500">
-        Created by Faiz Firdaus, 2025
+        <p>Created by Faiz Firdaus, 2025</p>
+        <p className='text-slate-300'>University of Massachusetts Amherst</p>
+        
       </footer>
     </div>
   );
