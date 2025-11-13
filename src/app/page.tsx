@@ -8,8 +8,6 @@ export default function Home() {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [labeledImage, setLabeledImage] = useState<string | null>(null);
-  const [showCamera, setShowCamera] = useState(false);
-  const [stream, setStream] = useState<MediaStream | null>(null);
 
 
   const loadImageBase64 = (file: File): Promise<string> => {
@@ -72,43 +70,7 @@ export default function Home() {
     img.src = URL.createObjectURL(file);
   };
 
-  const startCamera = async () => {
-    try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-      setStream(mediaStream);
-      setShowCamera(true);
-    } catch (error) {
-      console.error('Error accessing camera:', error);
-    }
-  };
 
-  const stopCamera = () => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      setStream(null);
-    }
-    setShowCamera(false);
-  };
-
-  const capturePhoto = () => {
-    const video = document.getElementById('camera-video') as HTMLVideoElement;
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d')!;
-    
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    ctx.drawImage(video, 0, 0);
-    
-    canvas.toBlob((blob) => {
-      if (blob) {
-        const file = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
-        setSelectedFile(file);
-        setResult(null);
-        setLabeledImage(null);
-        stopCamera();
-      }
-    }, 'image/jpeg');
-  };
 
   const handleUpload = async () => {
     if (!selectedFile) return;
@@ -137,54 +99,13 @@ export default function Home() {
         <h1 className="text-3xl font-bold text-center mb-8">Winter Moth Egg Detector</h1>
         
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <div className="mb-4 space-y-4">
+          <div className="mb-4">
             <input
               type="file"
               accept="image/*"
               onChange={handleFileChange}
               className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             />
-            
-            <div className="text-center">
-              <span className="text-gray-500">or</span>
-            </div>
-            
-            {!showCamera ? (
-              <button
-                onClick={startCamera}
-                className="block w-full text-sm text-gray-500 py-2 px-4 rounded-full border-0 font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100"
-              >
-                Take Photo with Camera
-              </button>
-            ) : (
-              <div className="space-y-4">
-                <video
-                  id="camera-video"
-                  autoPlay
-                  playsInline
-                  ref={(video) => {
-                    if (video && stream) {
-                      video.srcObject = stream;
-                    }
-                  }}
-                  className="w-full rounded-lg"
-                />
-                <div className="flex gap-2">
-                  <button
-                    onClick={capturePhoto}
-                    className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
-                  >
-                    Capture Photo
-                  </button>
-                  <button
-                    onClick={stopCamera}
-                    className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
 
           {selectedFile && !labeledImage && (
@@ -240,6 +161,10 @@ export default function Home() {
           )}
         </div>
       </div>
+      
+      <footer className="text-center mt-8 text-gray-500">
+        Created by Faiz Firdaus, 2025
+      </footer>
     </div>
   );
 }
